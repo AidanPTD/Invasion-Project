@@ -1,0 +1,12 @@
+[Version:1]
+AudioContent 
+{
+	SoundBuilder 
+	{
+		var Name = "FBZ"
+		var ResourceId = 0x5b271f36e37e7570
+		var Streamed = false
+		var Normalize = false
+		var MaxVolume = 0.899999976
+	}
+}

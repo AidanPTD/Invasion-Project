@@ -1,0 +1,9 @@
+class CheckpointManager : ZilchComponent
+{
+    var CurrentCheckpoint : Real3 = Real3();
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.CurrentCheckpoint = this.Space.FindObjectByName("Player").Transform.Translation;
+    }
+}

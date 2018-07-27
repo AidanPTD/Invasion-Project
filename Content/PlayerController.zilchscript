@@ -1,0 +1,349 @@
+// Implements a physics-obeying collider-semi-agnostic PlayerController
+
+class PlayerController : ZilchComponent
+{
+    // Guarantee that there's something to collide
+    [Dependency]
+    var RB : RigidBody;
+    [Dependency]
+    var Col : Collider;
+    
+    // Only function if we want to be active, to allow for disabling this quickly
+    [Property]
+    var Active : Boolean = true;
+    [Property]
+    var Allow2XJump : Boolean = true;
+    [Property]
+    var AllowCrouch : Boolean = true;
+    [Property]
+    var AllowCrouchHeight : Boolean = false;
+    [Property]
+    var MaxMoveSpeed : Real = 12;
+    // Prevent x-axis control in the air
+    [Property]
+    var NoWalkingInAir : Boolean = false;
+    
+    // We may want to consider very steep angles as ground - or not.
+    [Property]
+    var MaxGroundAngle : Real = 30.0;
+    
+    // Technically not a snap - prevents "sliding" on ground
+    [Property]
+    var StopOnIdle : Boolean = false;
+    
+    [Property]
+    var XMaxSpeed : Real = 5.0;
+    [Property]
+    var JumpSpeed : Real = 6.0;
+    [Property]
+    var Acceleration : Real = 1.5;
+    
+    [Property]
+    var CrouchHeight : Real = 0.7;
+    [Property]
+    var UnCrouchHeight : Real = 2;
+    [Property]
+    var CrouchBoxOffset : Real3;
+    [Property]
+    var JumpKey : Keys;
+    [Property]
+    var LeftKey : Keys;
+    [Property]
+    var RightKey : Keys;
+    [Property]
+    var CrouchKey : Keys;
+    [Property]
+    var BoostKey : Keys;
+    [Property]
+    var ShootKey : Keys = Keys.Space;
+    [Property]
+    var ShotSpeed : Real = 75;
+    
+    var CanJump : Boolean = false;
+    [Property]
+    var CanWalk : Boolean = true;
+    var InAir : Boolean = false;
+    var JumpsLeft : Integer = 0;
+    
+    var Crouching : Boolean = false;
+    var Jumping : Boolean = false;
+    var Flying : Boolean = false;
+    //
+    var OnGround : Boolean = false; //This one is used internally, for physics checks.
+    // Therefore, reading it is useless for any given frame, outside of this script.
+    //
+    
+    
+    var Grounded : Boolean = false;
+    
+    [Property]
+    var InfiniJumps : Boolean = false;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionPersisted, this.WhileColliding);
+    }
+
+    function OnCollideEnded(event : CollisionEvent)
+    {
+    }
+
+    // Be able to jump if we are colliding with something that is the ground
+    function WhileColliding(event : CollisionEvent)
+    {
+        if(event.ContactPoints.IsNotEmpty)
+        {
+        this.OnGround = this.ContactIsGround(event.ContactPoints.Current.WorldNormalTowardsOther);
+        this.Grounded = this.OnGround;
+        if(event.ContactPoints.IsNotEmpty && this.OnGround && !event.OtherObject.Collider.Ghost)
+        {
+            // In general, we can jump if we are on the ground
+            this.CanJump = true;
+            this.JumpsLeft = 1;
+        }
+        
+        // In general, we can't walk if we aren't on the ground and
+        // NoWalkingInAir is turned on
+        if(!event.ContactPoints.IsNotEmpty && !this.OnGround)
+        {
+            this.CanWalk = false;
+        }
+        
+        // Alternatively, we can't walk if we are colliding with something that isn't ground
+        if(event.ContactPoints.IsNotEmpty && !this.OnGround && !event.IsGhost && this.NoWalkingInAir)
+        {
+            this.CanWalk = false;
+        }
+        
+        // And vice versa
+        if(this.OnGround)
+        {
+            this.CanWalk = true;
+            if(this.RB.Velocity.Y <= 0)
+            {
+                this.Jumping = false;
+            }
+
+        }
+        }
+    }
+
+    // Is the ground relatively flat?
+    function ContactIsGround(normal : Real3) : Boolean
+    {
+        var cosineOfAngle = Math.Dot(normal, Real3(0.0, -1.0, 0.0));
+        cosineOfAngle = Math.Clamp(cosineOfAngle, -1.0, 1.0);
+        var angle = Math.ACos(cosineOfAngle);
+        return Math.ToDegrees(angle - 0.001) <= this.MaxGroundAngle;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var boostSpeed : Real = this.XMaxSpeed * 2;
+        if(this.Active)
+        {
+            if(this.InfiniJumps)
+            {
+                this.CanJump = true;
+            }
+            
+            if(this.NoWalkingInAir)
+            {
+                this.CanWalk = false;
+                if(this.Col.ContactCount > 0)
+                {
+                    foreach(var point in this.Col.Contacts)
+                    {
+                        if(!point.IsGhost && this.OnGround)
+                        {
+                            this.CanWalk = true;
+                        }
+                    }
+                }
+            }
+            // Be willing to change up to the acceleration every frame
+            var speedChange = this.Acceleration;
+            var xMax = this.XMaxSpeed;
+            // crouching means halve acceleration and maximum speed
+            if(this.Crouching)
+            {
+                speedChange /= 2;
+                xMax /= 2;
+            }
+            
+            if(this.CanWalk)
+            {
+                this.Owner.FlyingController.Flying = false;
+                if(this.KeyDown(this.LeftKey) && this.RB.Velocity.X > -xMax && !this.Crouching && !this.KeyDown(this.BoostKey))
+                {
+                    this.RB.Velocity = Real3(
+                        Math.Clamp(-xMax, this.RB.Velocity.X - speedChange, xMax),
+                        this.RB.Velocity.Y,
+                        this.RB.Velocity.Z);
+                }
+                else if(this.KeyDown(this.RightKey) && this.RB.Velocity.X < xMax && !this.Crouching && !this.KeyDown(this.BoostKey))
+                {
+                    this.RB.Velocity = Real3(
+                        Math.Clamp(-xMax, this.RB.Velocity.X + speedChange, xMax),
+                        this.RB.Velocity.Y,
+                        this.RB.Velocity.Z);
+                }
+                else if(this.KeyDown(this.LeftKey) && this.RB.Velocity.X > -xMax && !this.Crouching && this.KeyDown(this.BoostKey))
+                {
+                    this.RB.Velocity = Real3(
+                        Math.Clamp(-xMax, this.RB.Velocity.X - (speedChange * 3), xMax),
+                        this.RB.Velocity.Y,
+                        this.RB.Velocity.Z);
+                }
+                else if(this.KeyDown(this.RightKey) && this.RB.Velocity.X < xMax && !this.Crouching && this.KeyDown(this.BoostKey))
+                {
+                    this.RB.Velocity = Real3(
+                        Math.Clamp(-xMax, this.RB.Velocity.X + (speedChange * 3), xMax),
+                        this.RB.Velocity.Y,
+                        this.RB.Velocity.Z);
+                }
+                
+                else if(this.StopOnIdle)
+                {
+                    if(this.RB.Velocity.X > 0)
+                    {
+                        this.RB.Velocity = Real3(
+                            Math.Clamp(0.0, this.RB.Velocity.X - speedChange, this.RB.Velocity.X),
+                            this.RB.Velocity.Y,
+                            this.RB.Velocity.Z);
+                    }
+                    else if(this.RB.Velocity.X < 0)
+                    {
+                        this.RB.Velocity = Real3(
+                            Math.Clamp(this.RB.Velocity.X, this.RB.Velocity.X + speedChange, 0.0),
+                            this.RB.Velocity.Y,
+                            this.RB.Velocity.Z);
+                    }
+                }
+            }
+            
+            // Crouch code
+            if(this.AllowCrouch && this.KeyDown(this.CrouchKey) && !this.Crouching)
+            {
+                this.Crouching = true;
+                if(this.AllowCrouchHeight)
+                {
+                    this.Owner.Transform.Scale = Real3(
+                        this.Owner.Transform.Scale.X,
+                        this.CrouchHeight,
+                        this.Owner.Transform.Scale.Z);
+                    //this.Owner.BoxCollider.Size = Real3(1, 1.3, 1);
+                    //this.Owner.BoxCollider.Offset = this.CrouchBoxOffset;
+                    if(this.OnGround)
+                    {
+                        this.Owner.Transform.Translation = Real3(
+                            this.Owner.Transform.Translation.X,
+                            this.Owner.Transform.Translation.Y - this.CrouchHeight * 2,
+                            this.Owner.Transform.Translation.Z);
+                    }
+                }
+            }
+            
+            else if(!this.KeyDown(this.CrouchKey) && this.Crouching && this.CanUncrouch())
+            {
+                this.Crouching = false;
+                if(!this.KeyDown(this.CrouchKey) && this.AllowCrouchHeight)
+                {
+                    this.Owner.Transform.Scale = Real3(
+                        this.Owner.Transform.Scale.X,
+                        this.UnCrouchHeight,
+                        this.Owner.Transform.Scale.Z);
+                        //this.Owner.BoxCollider.Size = Real3(1, 1.7, 1);
+                        //this.Owner.BoxCollider.Offset = Real3(0, 0, 0);
+                }
+            }
+            
+            // Jump code
+            if(this.CanJump && Zero.Keyboard.KeyIsPressed(this.JumpKey))
+            {
+                if(!this.Allow2XJump)
+                {
+                    this.CanJump = false;
+                }
+                this.JumpsLeft -= 1;
+                this.Jump();
+                this.InAir = true;
+            }
+            if(this.InAir == true && Zero.Keyboard.KeyIsPressed(this.BoostKey))
+            {
+                this.Owner.FlyingController.Active = true;
+            }
+            else if (this.InAir == false && Zero.Keyboard.KeyIsPressed(this.BoostKey))
+            {
+                this.Owner.FlyingController.Active = false;
+            }
+            if(
+                ((this.JumpsLeft == 0 && this.Allow2XJump) || !this.Allow2XJump)
+                && !this.InfiniJumps)
+            {
+                this.CanJump = false;
+            }
+        }
+        this.OnGround = false;
+        if(this.KeyDown(this.BoostKey) && this.Owner.Sprite.FlipX == true)
+        {
+        }
+        if(this.KeyDown(this.BoostKey) && this.Owner.Sprite.FlipX == false)
+        {
+        }
+    }
+
+
+    
+    function CanUncrouch() : Boolean
+    {
+        var ray = Ray();
+        // Left side
+        ray.Start = Real3(
+            this.Owner.Transform.Translation.X - this.Owner.Transform.Scale.X * 0.5,
+            this.Owner.Transform.Translation.Y,
+            this.Owner.Transform.Translation.Z);
+        ray.Direction = Real3(0, 1, 0);
+        var filter = CastFilter();
+        filter.IgnoreCog = this.Owner;
+        
+        /*var upperLeftCog = this.Owner.Space.PhysicsSpace.CastRay(ray, 1, filter);
+        
+        if(upperLeftCog.Distance < this.Owner.Transform.Scale.Y * 0.55)
+        {
+            return false;
+        }
+
+        // Right side
+        ray.Start = Real3(
+            this.Owner.Transform.Translation.X + this.Owner.Transform.Scale.X * 0.5,
+            this.Owner.Transform.Translation.Y,
+            this.Owner.Transform.Translation.Z);
+        var upperRightCog = this.Owner.Space.PhysicsSpace.CastRayFirstFiltered(ray, filter);
+        
+        if(upperRightCog.Distance < this.Owner.Transform.Scale.Y * 0.55)
+        {
+            return false;
+        }
+        
+        */
+        return true;
+    }
+    
+    function Jump()
+    {
+        this.Jumping = true;
+        
+        this.RB.Velocity = Real3(
+            this.RB.Velocity.X,
+            this.JumpSpeed,
+            this.RB.Velocity.Z);
+    }
+    
+    function KeyDown(key : Keys) : Boolean
+    {
+        return Zero.Keyboard.KeyIsDown(key);
+    }
+}
+

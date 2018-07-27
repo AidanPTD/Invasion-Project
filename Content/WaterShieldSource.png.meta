@@ -1,0 +1,27 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "WaterShieldSource"
+		var ResourceId = 0x5b29d117261f7bcf
+		var FrameSizeX = 240
+		var FrameSizeY = 96
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 120
+		var OriginY = 48
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Source"
+		}
+	}
+}

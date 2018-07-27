@@ -1,0 +1,27 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "GunHUD"
+		var ResourceId = 0x5b29d11726130d18
+		var FrameSizeX = 48
+		var FrameSizeY = 48
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 24
+		var OriginY = 24
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Nearest
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Sprite"
+		}
+	}
+}

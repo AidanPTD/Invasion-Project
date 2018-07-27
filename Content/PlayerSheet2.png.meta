@@ -1,0 +1,28 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "PlayerSheet2"
+		var ResourceId = 0x5b29d1172617698f
+		var FrameSizeX = 157
+		var FrameSizeY = 250
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 78
+		var OriginY = 125
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Sprite"
+			"Sources"
+		}
+	}
+}

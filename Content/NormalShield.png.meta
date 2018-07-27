@@ -1,0 +1,20 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "NormalShield"
+		var ResourceId = 0x5b29c53c29a7a0a9
+		var FrameSizeX = 72
+		var FrameSizeY = 66
+		var FrameCount = 8
+		var FrameDelay = 0.055555556
+		var OriginX = 36
+		var OriginY = 33
+		var PixelsPerUnit = 24
+		var Sampling = SpriteSampling.Nearest
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

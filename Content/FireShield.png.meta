@@ -1,0 +1,20 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "FireShield"
+		var ResourceId = 0x5b29c5dc34169d44
+		var FrameSizeX = 48
+		var FrameSizeY = 48
+		var FrameCount = 18
+		var FrameDelay = 0.055555556
+		var OriginX = 24
+		var OriginY = 24
+		var PixelsPerUnit = 24
+		var Sampling = SpriteSampling.Nearest
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

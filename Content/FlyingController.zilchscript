@@ -1,0 +1,119 @@
+class FlyingController : ZilchComponent
+{
+    [Dependency]
+    var Player : Player;
+    [Dependency]
+    var IgnoreSpaceEffects : IgnoreSpaceEffects;
+    [Property]
+    var Active : Boolean = true;
+    [Property]
+    var AbilityToFly : Boolean = true;
+    [Property]
+    var FlySpeed : Real;
+    [Property]
+    var FireOffsetX : Real = -0.6;
+    [Property]
+    var FireOffsetY : Real = 0.5;
+    [Property]
+    var FlyMeterBar : CogPath;
+    [Property]
+    var Flying : Boolean;
+    [Property]
+    var FlyingFire : CogPath;
+    [Property]
+    var FlyKey : Keys = Keys.X;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.AbilityToFly == true)
+        {
+            if(this.Active)
+            {
+                if(this.Player.InAir == true && Zero.Keyboard.KeyIsPressed(this.FlyKey))
+                {
+                    //If Flying is currently on
+                    if(this.Flying)
+                    {
+                        this.DisableFlying();
+                    }
+                    //If Flying is not on
+                    else if(!this.Flying)
+                    {
+                        this.UpdateFlyingSprites();
+                        this.Flying = true;
+                    }
+                }
+                
+                if(this.Flying)
+                {
+        //            this.FlyingFire.Cog.SpriteParticleSystem.Visible = true;
+                    this.Owner.RigidBody.Velocity = Real3(0, -0.5, 0);
+                    this.Owner.AnimationController.State = States.Flying;
+        //            this.FlyingFire.Cog.SphericalParticleEmitter.EmitRate = 500;
+                    this.Owner.Player.Active = false;
+                    this.IgnoreSpaceEffects.IgnoreGravity = true;
+                    if(this.Owner.Player.KeyDown(this.Owner.Player.JumpKey))
+                    {
+                        this.Owner.Transform.Translation += Real3.YAxis * this.FlySpeed * event.Dt;
+                    }
+                    if(this.Owner.Player.KeyDown(this.Owner.Player.CrouchKey))
+                    {
+                        this.Owner.Transform.Translation -= Real3.YAxis * this.FlySpeed * event.Dt;
+                    }
+                    if(this.Owner.Player.KeyDown(this.Owner.Player.LeftKey))
+                    {
+                        this.Owner.Sprite.FlipX = true;
+                        if(this.Player.KeyDown(this.Player.BoostKey))
+                          this.Owner.Transform.Translation -= Real3.XAxis * this.FlySpeed * 2 * event.Dt;
+                        else
+                          this.Owner.Transform.Translation -= Real3.XAxis * this.FlySpeed * event.Dt;
+                    }
+                    if(this.Owner.Player.KeyDown(this.Owner.Player.RightKey))
+                    {
+                      if(this.Player.KeyDown(this.Player.BoostKey))
+                          this.Owner.Transform.Translation += Real3.XAxis * this.FlySpeed * 2 * event.Dt;
+                      else
+                          this.Owner.Transform.Translation += Real3.XAxis * this.FlySpeed * event.Dt;
+                    }
+                }
+            }
+        }
+    }
+    function DisableFlying()
+    {
+        this.Owner.RigidBody.DynamicState = RigidBodyDynamicState.Dynamic;
+        this.Flying = false;
+        this.Owner.AnimationController.State = States.Jumping;
+        //this.FlyingFire.Cog.SpriteParticleSystem.Visible = false;
+        this.Owner.Player.Active = true;
+        this.IgnoreSpaceEffects.IgnoreGravity = false;
+        this.DisableFlyingSprites();
+    }
+    function UpdateFlyingSprites()
+    {
+        this.Owner.AnimationController.Jumping = this.Owner.AnimationController.FlyingIdle;
+        this.Owner.AnimationController.Standing = this.Owner.AnimationController.FlyingIdle;
+        this.Owner.AnimationController.Crouching = this.Owner.AnimationController.FlyingIdle;
+        this.Owner.AnimationController.Walking = this.Owner.AnimationController.Flying;
+        this.Owner.AnimationController.UpdateSpriteSource();
+    }
+    function DisableFlyingSprites()
+    {
+        this.Owner.AnimationController.Jumping = this.Owner.AnimationController.OrigJump;
+        this.Owner.AnimationController.Standing = this.Owner.AnimationController.OrigStand;
+        this.Owner.AnimationController.Crouching = this.Owner.AnimationController.OrigCrouch;
+        this.Owner.AnimationController.Walking = this.Owner.AnimationController.OrigWalk;
+        this.Owner.AnimationController.UpdateSpriteSource();
+    }
+    function ChangeSprites(walk : SpriteSource, stand : SpriteSource, jump : SpriteSource, down : SpriteSource)
+    {
+        this.Owner.AnimationController.Walking = walk;
+        this.Owner.AnimationController.Standing = stand;
+        this.Owner.AnimationController.Jumping = jump;
+        this.Owner.AnimationController.Crouching = down;
+        this.Owner.AnimationController.UpdateSpriteSource();
+    }
+}

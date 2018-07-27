@@ -1,0 +1,11 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "OneUp"
+		var ResourceId = 0x5b2704c7f99f73e4
+		var LoaderType = "CollisionGroup"
+		var Version = 0
+	}
+}

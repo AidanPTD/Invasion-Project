@@ -1,0 +1,67 @@
+class CameraFollow : ZilchComponent
+{
+    [Property]
+    var CameraChange : Boolean; 
+    [Property]
+    var OnlyX : Boolean;
+    [Property]
+    var OnlyY : Boolean;
+    [Property]
+    var BothXY : Boolean;
+    [Property]
+    var TargetLock : Boolean;
+    [Property]
+    var Camera : CogPath;
+    [Property]
+    var TargetToLock : CogPath;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionEnded, this.CollisionEnd);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.CameraChange)
+        {
+            if(this.OnlyX)
+            {
+                this.Camera.Cog.FollowObject.BothXY = false;
+                this.Camera.Cog.FollowObject.OnlyX = true;
+                this.Camera.Cog.FollowObject.OnlyY = false;
+                this.Camera.Cog.FollowObject.TargetLock = false;
+            }
+            if(this.OnlyY)
+            {
+                this.Camera.Cog.FollowObject.BothXY = false;
+                this.Camera.Cog.FollowObject.OnlyY = true;
+                this.Camera.Cog.FollowObject.OnlyY = false;
+                this.Camera.Cog.FollowObject.TargetLock = false;
+            }
+            if(this.BothXY)
+            {
+                this.Camera.Cog.FollowObject.OnlyX = false;
+                this.Camera.Cog.FollowObject.OnlyY = false;
+                this.Camera.Cog.FollowObject.BothXY = true;
+                this.Camera.Cog.FollowObject.TargetLock = false;
+            }
+            if(this.TargetLock)
+            {
+                this.Camera.Cog.FollowObject.OnlyX = false;
+                this.Camera.Cog.FollowObject.OnlyY = false;
+                this.Camera.Cog.FollowObject.BothXY = false;
+                this.Camera.Cog.FollowObject.OtherTarget.Cog = this.TargetToLock.Cog;
+                this.Camera.Cog.FollowObject.TargetLock = true;
+                
+            }
+            this.CameraChange = false;
+        }
+    }
+    function CollisionEnd(event : CollisionEvent)
+    {
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.Player)
+        {
+            this.CameraChange = true;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "Beam2"
+		var ResourceId = 0x5b29c10da182cd6b
+		var FrameSizeX = 180
+		var FrameSizeY = 43
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 90
+		var OriginY = 21
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+}

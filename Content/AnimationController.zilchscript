@@ -1,0 +1,295 @@
+enum States {Walking, Standing, Jumping, Crouching, Flying}
+
+class AnimationController : ZilchComponent
+{    
+    [Dependency]
+    var Sprite : Sprite;
+    [Dependency]
+    var Player : Player;
+    [Dependency]
+    var FlyingController : FlyingController;
+    [Property]
+    var Standing : SpriteSource;
+    [Property]
+    var Jumping : SpriteSource;
+    [Property]
+    var Walking : SpriteSource;
+    [Property]
+    var Crouching : SpriteSource;
+    [Property]
+    var StandShooting : SpriteSource;
+    [Property]
+    var WalkShooting : SpriteSource;
+    [Property]
+    var JumpShooting : SpriteSource;
+    [Property]
+    var AfterJumpShoot : SpriteSource;
+    [Property]
+    var JumpAnimationWhileFalling : Boolean = true;
+    [Property]
+    var OrigStand : SpriteSource;
+    [Property]
+    var OrigWalk : SpriteSource;
+    [Property]
+    var OrigJump : SpriteSource;
+    [Property]
+    var OrigCrouch : SpriteSource;
+    [Property]
+    var Flying : SpriteSource;
+    [Property]
+    var FlyingIdle : SpriteSource;
+    [Property]
+    var FlyingUp : SpriteSource;
+    [Property]
+    var FlyShoot : SpriteSource;
+    [Property]
+    var FlyingShoot : SpriteSource;
+    [Dependency]
+    var ShootingController : ShootingController;
+    var State : States = States.Standing;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.State == States.Flying)
+        {
+            if(this.FlyingController.AbilityToFly == true)
+            {
+                if(Zero.Keyboard.KeyIsPressed(this.Player.RightKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                    this.Sprite.FlipX = false;
+                }
+                else if(Zero.Keyboard.KeyIsPressed(this.Player.LeftKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                    this.Sprite.FlipX = true;
+                }
+                if(Zero.Keyboard.KeyIsDown(this.Player.LeftKey) 
+                && Zero.Keyboard.KeyIsReleased(this.Player.RightKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                }
+                else if(Zero.Keyboard.KeyIsDown(this.Player.RightKey) 
+                && Zero.Keyboard.KeyIsReleased(this.Player.LeftKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                }
+                if((Zero.Keyboard.KeyIsDown(this.Player.LeftKey) 
+                || Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+                && Zero.Keyboard.KeyIsPressed(this.Player.JumpKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                }
+                else if((Zero.Keyboard.KeyIsDown(this.Player.LeftKey) 
+                || Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+                && Zero.Keyboard.KeyIsPressed(this.Player.CrouchKey))
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                }
+                else if(Zero.Keyboard.KeyIsPressed(this.Player.JumpKey))
+                {
+                    this.Sprite.SpriteSource = this.FlyingUp;
+                }
+                
+                else if(Zero.Keyboard.KeyIsReleased(this.Player.JumpKey) 
+                || Zero.Keyboard.KeyIsReleased(this.Player.LeftKey) 
+                || Zero.Keyboard.KeyIsReleased(this.Player.RightKey))
+                {
+                    this.Sprite.SpriteSource = this.FlyingIdle;
+                }
+                if(Zero.Keyboard.KeyIsDown(this.Player.ShootKey))
+                {
+                    this.Sprite.SpriteSource = this.FlyShoot;
+                }
+                else if(Zero.Keyboard.KeyIsReleased(this.Player.ShootKey) 
+                && this.ShootingController.CanShoot == true)
+                {
+                    this.Sprite.SpriteSource = this.FlyingIdle;
+                }
+                if(Zero.Keyboard.KeyIsDown(this.Player.ShootKey) && 
+                (Zero.Keyboard.KeyIsDown(this.Player.RightKey) || 
+                Zero.Keyboard.KeyIsDown(this.Player.LeftKey)))
+                {
+                    this.Sprite.SpriteSource = this.FlyingShoot;
+                }
+                else if(Zero.Keyboard.KeyIsReleased(this.Player.ShootKey)&& 
+                (Zero.Keyboard.KeyIsDown(this.Player.RightKey) || 
+                Zero.Keyboard.KeyIsDown(this.Player.LeftKey)) && this.ShootingController.CanShoot == true)
+                {
+                    this.Sprite.SpriteSource = this.Flying;
+                }
+            }
+        }
+        if(this.State == States.Standing)
+        {
+            if(Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+            {
+                this.State = States.Walking;
+                this.Sprite.SpriteSource = this.Walking;
+                this.Sprite.FlipX = false;
+                this.Owner.BoxCollider.Size;
+            }
+            else if(Zero.Keyboard.KeyIsDown(this.Player.LeftKey))
+            {
+                this.State = States.Walking;
+                this.Sprite.SpriteSource = this.Walking;
+                this.Sprite.FlipX = true;
+            }
+            if(Zero.Keyboard.KeyIsPressed(this.Player.JumpKey) || this.Player.Jumping)
+            {
+                this.State = States.Jumping;
+                this.Sprite.SpriteSource = this.Jumping;
+            }
+            if(Zero.Keyboard.KeyIsDown(this.Player.CrouchKey) || this.Player.Crouching)
+            {
+                this.State = States.Crouching;
+                this.Sprite.SpriteSource = this.Crouching;
+                this.Owner.BoxCollider.Size = Real3(1,1.3,1);
+                this.Owner.BoxCollider.Offset = Real3(0,-0.9,0);
+            }
+            if(Zero.Keyboard.KeyIsReleased(this.Player.CrouchKey) || !this.Player.Crouching)
+            {
+                
+                this.Owner.BoxCollider.Size = Real3(1,1.7,1);
+                this.Owner.BoxCollider.Offset = Real3(0,0,0);
+            }
+            
+            if(Zero.Keyboard.KeyIsDown(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.StandShooting;
+            }
+            else if(Zero.Keyboard.KeyIsReleased(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.Standing;
+            }
+        }
+        else if(this.State == States.Crouching)
+        {
+            if(Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+            {
+                this.Sprite.FlipX = false;
+            }
+            else if(Zero.Keyboard.KeyIsDown(this.Player.LeftKey))
+            {
+                this.Sprite.FlipX = true;
+            }
+            if(Zero.Keyboard.KeyIsPressed(this.Player.JumpKey) || this.Player.Jumping)
+            {
+                this.State = States.Jumping;
+                this.Sprite.SpriteSource = this.Jumping;
+            }
+            if(!Zero.Keyboard.KeyIsDown(this.Player.RightKey) &&
+            !Zero.Keyboard.KeyIsDown(this.Player.LeftKey) && !Zero.Keyboard.KeyIsDown(this.Player.CrouchKey))
+            {
+                this.State = States.Standing;
+                this.Sprite.SpriteSource = this.Standing;
+            }
+            
+        }
+        else if(this.State == States.Walking)
+        {
+            if(Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+            {
+                this.Sprite.FlipX = false;
+            }
+            else if(Zero.Keyboard.KeyIsDown(this.Player.LeftKey))
+            {
+                this.Sprite.FlipX = true;
+            }
+            if(!Zero.Keyboard.KeyIsDown(this.Player.RightKey) &&
+            !Zero.Keyboard.KeyIsDown(this.Player.LeftKey))
+            {
+                this.State = States.Standing;
+                this.Sprite.SpriteSource = this.Standing;
+            }
+            if(Zero.Keyboard.KeyIsPressed(this.Player.JumpKey) 
+                || (this.JumpAnimationWhileFalling && this.Player.Jumping))
+            {
+                this.State = States.Jumping;
+                this.Sprite.SpriteSource = this.Jumping;
+            }
+            if(Zero.Keyboard.KeyIsDown(this.Player.CrouchKey) || this.Player.Crouching)
+            {
+                this.State = States.Crouching;
+                this.Sprite.SpriteSource = this.Crouching;
+            }
+            if(Zero.Keyboard.KeyIsDown(this.Player.CrouchKey) || this.Player.Crouching)
+            {
+                this.State = States.Crouching;
+                this.Sprite.SpriteSource = this.Crouching;
+            }
+            if(Zero.Keyboard.KeyIsDown(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.WalkShooting;
+            }
+            else if(Zero.Keyboard.KeyIsReleased(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.Walking;
+            }
+        }
+        else if(this.State == States.Jumping)
+        {
+            if(Zero.Keyboard.KeyIsDown(this.Player.RightKey))
+            {
+                this.Sprite.FlipX = false;
+            }
+            else if(Zero.Keyboard.KeyIsDown(this.Player.LeftKey))
+            {
+                this.Sprite.FlipX = true;
+            }
+            if(Zero.Keyboard.KeyIsPressed(this.Player.BoostKey))
+            {
+                this.State == States.Flying;
+                this.Sprite.SpriteSource = this.FlyingIdle;
+            }
+            if(Zero.Keyboard.KeyIsPressed(this.Player.JumpKey) && this.Player.CanJump == true)
+            {
+                this.UpdateSpriteSource();
+            }
+            if(!this.Player.Jumping)
+            {
+                this.State = States.Standing;
+                this.Sprite.SpriteSource = this.Standing;
+            }
+            
+            if(Zero.Keyboard.KeyIsDown(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.JumpShooting;
+            }
+            else if(Zero.Keyboard.KeyIsReleased(this.Player.ShootKey) && this.ShootingController.CanShoot == true)
+            {
+                this.Sprite.SpriteSource = this.AfterJumpShoot;
+            }
+        }
+    }
+    function UpdateSpriteSource()
+    {
+        if(this.State == States.Standing)
+        {
+            this.Owner.Sprite.SpriteSource = this.Owner.AnimationController.Standing;
+        }
+        if(this.State == States.Walking)
+        {
+            this.Owner.Sprite.SpriteSource = this.Owner.AnimationController.Walking;
+        }
+        if(this.State == States.Jumping)
+        {
+            this.Owner.Sprite.SpriteSource = this.Owner.AnimationController.Jumping;
+        }
+        if(this.State == States.Crouching)
+        {
+            this.Owner.Sprite.SpriteSource = this.Owner.AnimationController.Crouching;
+        }
+        if(this.State == States.Flying)
+        {
+            this.Owner.Sprite.SpriteSource = this.Owner.AnimationController.FlyingIdle;
+        }
+    }
+}
+
+

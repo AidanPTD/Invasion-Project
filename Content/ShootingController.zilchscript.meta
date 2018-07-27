@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchScriptBuilder 
+	{
+		var Name = "ShootingController"
+		var ResourceId = 0x5b28a8dee12e2eb0
+	}
+}

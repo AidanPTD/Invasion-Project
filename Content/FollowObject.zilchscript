@@ -1,0 +1,87 @@
+class FollowObject : ZilchComponent
+{
+    [Property]
+    var Active : Boolean = true;
+    [Property]
+    var OnlyX : Boolean;
+    [Property]
+    var OnlyY : Boolean;
+    [Property]
+    var BothXY : Boolean = true;
+    [Property]
+    var TargetLock : Boolean;
+    [Property]
+    var Leader : CogPath = null;
+    [Property]
+    var PlayerAsLeader : Boolean;
+    [Property]
+    var CameraAsLeader : Boolean;
+    [Property]
+    var XYOffset : Real2 = Real2(0, 0);
+    [Property]
+    var TargetOffset : Real2 = Real2(0,0);
+    [Property]
+    var OnlyXOffset : Real;
+    [Property]
+    var OnlyYOffset : Real;
+    [Property]
+    var OtherTarget : CogPath;
+    [Property]
+    var ZOffset : Real = 1;//ZOffset 1 for HUD objects
+    function Initialize(init : CogInitializer)
+    {
+      if(this.PlayerAsLeader)
+        this.Leader.Cog = this.Space.FindObjectByName("Player");
+      else if(this.CameraAsLeader)
+        this.Leader.Cog = this.Space.FindObjectByName("GameCamera");
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.ZOffset = this.Owner.Transform.Translation.Z + this.ZOffset;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var xyOffset : Real2 = this.Leader.Cog.Transform.Translation.XY;
+        xyOffset += this.XYOffset;
+        var onlyX : Real = this.Leader.Cog.Transform.Translation.X;
+        onlyX += this.OnlyXOffset;
+        var onlyY : Real = this.Leader.Cog.Transform.Translation.Y;
+        onlyY += this.OnlyYOffset;
+        var targetXY : Real2 = Real2();
+        if(this.OtherTarget.Cog != null)
+        {
+            targetXY = this.OtherTarget.Cog.Transform.Translation.XY;
+            targetXY += this.TargetOffset;
+        }
+        if(this.Active)
+        {
+            if(this.BothXY)
+            {
+                this.Owner.Transform.Translation = Real3(xyOffset, this.ZOffset);
+                this.OnlyX = false;
+                this.OnlyY = false;
+                this.TargetLock = false;
+            }
+            else if(this.OnlyX)
+            {
+                this.Owner.Transform.Translation = Real3(onlyX, this.Owner.Transform.Translation.Y, this.ZOffset);
+                this.BothXY = false;
+                this.OnlyY = false;
+                this.TargetLock = false;
+            }
+            else if(this.OnlyY)
+            {
+                this.Owner.Transform.Translation = Real3(this.Owner.Transform.Translation.X, onlyY, this.ZOffset);
+                this.BothXY = false;
+                this.OnlyX = false;
+                this.TargetLock = false;
+            }
+            else if(this.TargetLock)
+            {
+                this.Owner.Transform.Translation = Real3(targetXY, this.ZOffset);
+                this.BothXY = false;
+                this.OnlyX = false;
+                this.OnlyY = false;
+            }
+        }
+    }
+}

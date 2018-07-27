@@ -1,0 +1,424 @@
+class PlayerPowerUps : ZilchComponent
+{
+    [Property]
+    var Invincibility : Boolean = false;
+    [Property]
+    var Speed : Boolean;
+    [Property]
+    var NormalShield : Boolean = false;
+    [Property]
+    var FireShield : Boolean = false;
+    [Property]
+    var WaterShield : Boolean = false;
+    [Property]
+    var ShieldActive : Boolean = false;
+    [Property]
+    var ShieldSprite : Cog;
+    [Property]
+    var ShieldParticles : Cog;
+    [Property]
+    var FireCard : CogPath;
+    [Property]
+    var WaterCard : CogPath;
+    [Property]
+    var NormalCard : CogPath;
+    [Property]
+    var InvCard : CogPath;
+    [Property]
+    var SpeedCard : CogPath;
+    [Property]
+    var CardActiveYValue : Real = 13.5;
+    [Property]
+    var CardNotActiveYValue : Real = 16;
+    [Property]
+    var FSSprite : SpriteSource = SpriteSource.FireShield;
+    [Property]
+    var WSSprite : SpriteSource = SpriteSource.WaterShield;
+    [Property]
+    var NSSprite : SpriteSource = SpriteSource.NormalShield;
+    [Property]
+    var InvincibilitySize : Real3 =Real3(0.2, 0.2, 0.2);
+    [Property]
+    var ShieldSize : Real3 = Real3(0.3, 0.3, 0.3);
+    [Property]
+    var FireTint : Real4 = Real4(1, 1, 1, 1);
+    [Property]
+    var WaterTint : Real4 = Real4(1, 1, 1, 1);
+    [Property]
+    var NormalTint : Real4 = Real4(1, 1, 1, 1);
+    [Property]
+    var OriginalTint : Real4 = Real4(1,1,1,1);
+    [Property]
+    var ShieldSpinValue1 : Real3 = Real3();
+    [Property]
+    var ShieldSpinValue2 : Real3 = Real3();
+    [Property]
+    var InvincibilityTimer : Real = 0;
+    [Property]
+    var InvincibilityTime : Real = 20;
+    [Property]
+    var OrigInvincTime : Real = 20;
+    [Property]
+    var InvincibilityTickRate : Real = 1;
+    [Property]
+    var SpeedTimer : Real = 0;
+    [Property]
+    var SpeedTime : Real = 20;
+    [Property]
+    var OrigSpeedTime : Real = 20;
+    [Property]
+    var SpeedTickRate : Real = 1;
+    var Timer : Real;
+    [Property]
+    var TimerTrue : Boolean;
+    function Initialize(init : CogInitializer)
+    {
+        this.ShieldSprite = this.Owner.FindChildByName("ShieldSprite");
+        this.ShieldParticles = this.Owner.FindChildByName("ShieldParticles");
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollision);
+        
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+      if(this.ShieldActive)
+      {
+        if(!this.Invincibility)
+        {
+          //this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource;
+        }
+        else if(this.FireShield)
+        {
+        }
+        else if(this.NormalShield)
+        {
+        }
+        else if(this.WaterShield)
+        {
+        }
+        else if(this.Speed)
+        {
+          
+        }
+      }
+      
+    }
+    function OnCollision(event : CollisionEvent)
+    {
+      if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.InvincibilityPU)
+      {
+        this.EnableInvincibility();
+        event.OtherObject.Destroy();
+      }
+    }
+    function EnableInvincibility()
+    {
+      this.Space.FindObjectByName("GameCamera").SoundEmitter.Paused = true;
+      this.Invincibility = true;
+      //this.ShieldParticles.SpriteParticleSystem.Visible = true;
+      this.ShieldParticles.SphericalParticleEmitter.Active = true;
+      this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource.Twinkle;
+      this.ShieldParticles.SphericalParticleEmitter.EmitRate = 100;
+      this.ShieldParticles.SpriteParticleSystem.VertexColor = Real4(1, 1, 1, 1);
+      
+    }
+}
+/*
+class PlayerPowerUps : ZilchComponent
+{
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollision);
+    }
+    function DisableInvincibility()
+    {
+        
+        this.Invincibility = false;
+        this.ShieldSprite.Cog.SpriteParticleSystem.Visible = false;
+        this.ShieldSprite.Cog.SphericalParticleEmitter.Active == false;
+        if(this.FireShield == true || this.NormalShield == true || this.WaterShield == true)
+        {
+            this.ShieldActive = true;
+        }
+        this.Owner.PlayerSoundEmitter.BackgroundMusic.Cog.SoundEmitter.Continue();
+    }
+    function EnableInvincibility()
+    {
+        this.Owner.PlayerSoundEmitter.BackgroundMusic.Cog.SoundEmitter.Pause();
+        if(this.Invincibility == false)
+        {
+            this.Owner.SoundEmitter.PlayCue(this.Owner.PlayerSoundEmitter.Invincibility);
+        }
+        this.Invincibility = true;
+        this.ShieldSprite.Cog.SpriteParticleSystem.Texture = Texture.Twinkle;
+        this.ShieldSprite.Cog.SpriteParticleSystem.Visible = true;
+        this.ShieldSprite.Cog.SphericalParticleEmitter.Active == true;
+        this.ShieldSprite.Cog.SphericalParticleEmitter.EmitRate = 100;
+        this.ShieldSprite.Cog.SpriteParticleSystem.Tint = Real4(1,1,1,1);
+        this.ShieldSprite.Cog.SphericalParticleEmitter.Lifetime = 0.2;
+        this.ShieldSprite.Cog.SphericalParticleEmitter.EmitterSize = this.ShieldSize;
+        
+        this.ShieldSprite2.Cog.SpriteParticleSystem.Texture = Texture.Twinkle;
+        this.ShieldSprite2.Cog.SpriteParticleSystem.Visible = true;
+        this.ShieldSprite2.Cog.SphericalParticleEmitter.Active == true;
+        this.ShieldSprite2.Cog.SphericalParticleEmitter.EmitRate = 100;
+        this.ShieldSprite2.Cog.SpriteParticleSystem.Tint = Real4(1,1,1,1);
+        this.ShieldSprite2.Cog.SphericalParticleEmitter.Lifetime = 0.2;
+        this.ShieldSprite2.Cog.SphericalParticleEmitter.EmitterSize = this.ShieldSize;
+        this.ShieldActive = false;
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.TimerTrue)
+            this.Timer += event.Dt;
+        if(this.ShieldActive)
+        {
+            if(this.Invincibility == false)
+            {
+                this.ShieldSprite.Cog.SphericalParticleEmitter.EmitRate = 700;
+                this.ShieldSprite2.Cog.SphericalParticleEmitter.EmitRate = 700;
+            }
+            this.ShieldSprite.Cog.SpriteParticleSystem.Visible = true;
+            this.ShieldSprite.Cog.SphericalParticleEmitter.Active == true;
+            this.ShieldSprite.Cog.SphericalParticleEmitter.Lifetime = 0.1;
+            this.ShieldSprite.Cog.SphericalParticleEmitter.EmitterSize = this.ShieldSize;
+            this.ShieldSprite.Cog.Sprite.Visible = true;
+            this.ShieldSprite.Cog.ObjectSpin.SpinValue = this.ShieldSpinValue1;
+            
+            this.ShieldSprite2.Cog.SpriteParticleSystem.Visible = true;
+            this.ShieldSprite2.Cog.SphericalParticleEmitter.Active == true;
+            this.ShieldSprite2.Cog.SphericalParticleEmitter.Lifetime = 0.1;
+            this.ShieldSprite2.Cog.SphericalParticleEmitter.EmitterSize = this.ShieldSize;
+            this.ShieldSprite2.Cog.Sprite.Visible = true;
+            this.ShieldSprite2.Cog.ObjectSpin.SpinValue = this.ShieldSpinValue2;
+        }
+        if(Zero.Keyboard.KeyIsPressed(Keys.S))
+        { 
+            if(this.Speed)
+            {
+                this.Speed = false;
+            }
+            else if(this.Speed == false)
+            {
+                this.Speed = true;
+            }
+        }
+        if(!this.ShieldActive)
+        {
+            this.ShieldSprite.Cog.Sprite.Visible = false;
+            this.ShieldSprite2.Cog.Sprite.Visible = false;
+            Action.Property(this.NormalCard.Cog.Actions, @this.NormalCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.FireCard.Cog.Actions, @this.FireCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.WaterCard.Cog.Actions, @this.WaterCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            if(this.Invincibility == false)
+            {
+                this.ShieldSprite.Cog.SpriteParticleSystem.Visible = false;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Visible = false;
+                this.NormalShield = false;
+                this.FireShield = false;
+                this.WaterShield = false;
+            }
+        }
+        if(this.Invincibility)
+        {
+            Action.Property(this.InvCard.Cog.Actions, @this.InvCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardActiveYValue, 0.3, Ease.Linear);
+            this.ShieldActive = false;
+            this.InvincibilityTimer += event.Dt;
+            if(this.InvincibilityTimer > this.InvincibilityTickRate)
+            {
+                this.InvincibilityTimer = 0;
+                this.InvincibilityTime -= 1;
+                if(this.InvincibilityTime <= 0)
+                {
+                    this.DisableInvincibility();
+                    this.InvincibilityTime = this.OrigInvincTime;
+                    this.Owner.SoundEmitter.Stop();
+                }
+            }
+        }
+        if(!this.Invincibility)
+        {
+            Action.Property(this.InvCard.Cog.Actions, @this.InvCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+        }
+        if(!this.Speed)
+        {
+            Action.Property(this.SpeedCard.Cog.Actions, @this.SpeedCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+        }
+        if(this.Speed)
+        {
+            Action.Property(this.SpeedCard.Cog.Actions, @this.SpeedCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardActiveYValue, 0.3, Ease.Linear);
+            this.Owner.PlayerController.XMaxSpeed = 35;
+            this.SpeedTimer += event.Dt;
+            if(this.SpeedTimer > this.SpeedTickRate)
+            {
+                this.SpeedTimer = 0;
+                this.SpeedTime -= 1;
+                if(this.SpeedTime <= 0)
+                {
+                    this.SpeedTime = 0;
+                    this.Speed = false;
+                    this.Owner.PlayerController.XMaxSpeed = 20;
+                    this.SpeedTime = this.OrigSpeedTime;
+                }
+            }
+        }
+        if(this.NormalShield)
+        {   
+            this.ShieldSprite.Cog.Sprite.Color = this.NormalTint;
+            this.ShieldSprite2.Cog.Sprite.Color = this.NormalTint;
+            Action.Property(this.NormalCard.Cog.Actions, @this.NormalCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.FireCard.Cog.Actions, @this.FireCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.WaterCard.Cog.Actions, @this.WaterCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            if(this.Invincibility == false)
+            {
+                this.ShieldSprite.Cog.SpriteParticleSystem.Tint = this.NormalTint;
+                this.ShieldSprite.Cog.SpriteParticleSystem.Texture = Texture.Laser;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Tint = this.NormalTint;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Texture = Texture.Laser;
+            }
+            this.FireShield = false;
+            this.WaterShield = false;
+        }
+        else if(this.FireShield)
+        {
+            Action.Property(this.NormalCard.Cog.Actions, @this.NormalCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.FireCard.Cog.Actions, @this.FireCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.WaterCard.Cog.Actions, @this.WaterCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            this.NormalShield = false;
+            this.WaterShield = false;
+            this.ShieldSprite.Cog.Sprite.Color = this.FireTint;
+            this.ShieldSprite2.Cog.Sprite.Color = this.FireTint;
+            if(this.Invincibility == false)
+            {
+                this.ShieldSprite.Cog.SpriteParticleSystem.Tint = this.FireTint;
+                this.ShieldSprite.Cog.SpriteParticleSystem.Texture = Texture.Fire;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Tint = this.FireTint;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Texture = Texture.Fire;
+            }
+        }
+        else if(this.WaterShield)
+        {
+            Action.Property(this.NormalCard.Cog.Actions, @this.NormalCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.FireCard.Cog.Actions, @this.FireCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardNotActiveYValue, 0.3, Ease.Linear);
+            Action.Property(this.WaterCard.Cog.Actions, @this.WaterCard.Cog.FollowObject.XYOffset.Y, 
+            this.CardActiveYValue, 0.3, Ease.Linear);
+            this.ShieldSprite.Cog.Sprite.Color = this.WaterTint;
+            this.ShieldSprite2.Cog.Sprite.Color = this.WaterTint;
+            if(this.Invincibility == false)
+            {
+                this.ShieldSprite.Cog.SpriteParticleSystem.Tint = this.WaterTint;
+                this.ShieldSprite.Cog.SpriteParticleSystem.Texture = Texture.Laser;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Tint = this.WaterTint;
+                this.ShieldSprite2.Cog.SpriteParticleSystem.Texture = Texture.Laser;
+            }
+            this.NormalShield = false;
+            this.FireShield = false;
+        }
+    }
+    function OnCollision(event : CollisionEvent)
+    {
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.Invincibility)
+        {
+            this.EnableInvincibility();
+            event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+            event.OtherObject.Collider.SendsEvents = false;
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.NormalShield)
+        {
+            this.NormalShield = true;
+            this.FireShield = false;
+            this.WaterShield = false;
+            this.ShieldSprite.Cog.Sprite.SpriteSource = this.NSSprite;
+            this.ShieldSprite2.Cog.Sprite.SpriteSource = this.NSSprite;
+            if(this.Invincibility == false)
+            {
+                this.ShieldActive = true;
+            }
+            event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+            event.OtherObject.Collider.SendsEvents = false;
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.FireShield)
+        {
+            this.NormalShield = false;
+            this.FireShield = true;
+            this.WaterShield = false;
+            this.ShieldSprite.Cog.Sprite.SpriteSource = this.FSSprite;
+            this.ShieldSprite2.Cog.Sprite.SpriteSource = this.FSSprite;
+            
+            if(this.Invincibility == false)
+            {
+                this.ShieldActive = true;
+            }
+            event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+            event.OtherObject.Collider.SendsEvents = false;
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.WaterShield)
+        {
+            this.NormalShield = false;
+            this.FireShield = false;
+            this.WaterShield = true;
+            this.ShieldSprite.Cog.Sprite.SpriteSource = this.WSSprite;
+            this.ShieldSprite2.Cog.Sprite.SpriteSource = this.WSSprite;
+            if(this.Invincibility == false)
+            {
+                this.ShieldActive = true;
+            }
+            event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+            event.OtherObject.Collider.SendsEvents = false;
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.PlusTorpedo)
+        {
+            this.Owner.ShipController.NumTorpedos += 2;
+            this.Space.CreateAtPosition(Archetype.ItemAppear, event.OtherObject.Transform.Translation);
+            event.OtherObject.Destroy();
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.Coins)
+        {
+            this.Owner.PlayerLife.LifeData.Cog.PlayerData.DataCog.DataSaver.Coins += 10;
+        }
+        if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.Speed)
+        {
+            this.Space.CreateAtPosition(Archetype.ItemAppear, event.OtherObject.Transform.Translation);
+            this.Speed = true;
+            event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+            event.OtherObject.Collider.SendsEvents = false;
+        }
+    }
+    function TimerFunction(time : Real, tickrate : Real, timer : Real)
+    {
+        this.TimerTrue = true;
+        if(timer > tickrate)
+        {
+            timer = 0;
+            time -= 1;
+            if(time <= 0)
+            {
+                time = 0;
+                this.TimerTrue = false;
+            }
+        }
+    }
+    function AddCoins(coins : Integer)
+    {
+        var beforeCoins = this.Owner.PlayerLife.LifeData.Cog.PlayerData.DataCog.DataSaver.Coins;
+        this.TimerFunction(1.0, 0.01, this.Timer);
+    }
+}
+
+*/

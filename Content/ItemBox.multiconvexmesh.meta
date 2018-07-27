@@ -1,0 +1,20 @@
+[Version:1]
+BinaryContent 
+{
+	BinaryBuilder 
+	{
+		var Name = "ItemBox"
+		var ResourceId = 0x5b270592a24cb458
+		var LoaderType = "MultiConvexMesh"
+		var Version = 0
+		var FilterTag = ""
+		var ResourceOwner = ""
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"MultiConvexMesh"
+		}
+	}
+}

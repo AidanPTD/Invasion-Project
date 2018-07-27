@@ -1,0 +1,96 @@
+class ShootingController : ZilchComponent
+{
+    [Property]
+    var ShotSpeed : Real;
+    [Dependency]
+    var Player : Player;
+    [Dependency]
+    var FlyingController : FlyingController;
+    [Property]
+    var NormalBullet : Archetype = Archetype.PlayerBullet;
+    [Property]
+    var CanShoot : Boolean;
+    [Property]
+    var ShotLocation : CogPath;
+    [Property]
+    var ShotLocOffset : Real;
+    [Property]
+    var NormBullet : Boolean;
+    [Property]
+    var PortalMode : Boolean;
+    [Property]
+    var PortBullet : Boolean;
+    [Property]
+    var PortBulletEnd : Boolean;
+    
+    var ShotCoolDown : DoubleReal = 0.5;
+    var Timer : Real;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+      this.Timer += event.Dt;
+      if(Zero.Keyboard.KeyIsPressed(this.Player.ShootKey) && this.Timer > this.ShotCoolDown)
+      {
+        if(this.PortBullet)
+        {
+            this.PortBulletEnd = false;
+        }
+        else if(this.PortBulletEnd)
+        {
+            this.PortBullet = false;
+        }
+        if(this.NormBullet)
+        {
+            this.ShootProjectile(this.NormalBullet);
+        }
+        if(this.PortalMode)
+        {
+            if(this.PortBullet == true)
+            {
+                //this.ShootProjectile(Archetype.PortalProjectile);
+                this.PortBulletEnd = true;
+                this.PortBullet = false;
+            }
+            else if(this.PortBulletEnd == true)
+            {
+                //this.ShootProjectile(Archetype.PortalProjectileEnd);
+                this.PortBulletEnd = false;
+                this.PortBullet = true;
+            }
+        }
+        this.Timer = 0.0;
+      }      
+    }
+    function ShootProjectile(projectile : Archetype)
+    {
+        if(this.Owner.Sprite.FlipX == false)
+        {
+            this.ShotLocation.Cog.FollowObject.XYOffset.X = this.ShotLocOffset;
+        }
+        if(this.Owner.Sprite.FlipX == true)
+        {
+            this.ShotLocation.Cog.FollowObject.XYOffset.X = -this.ShotLocOffset;
+        }
+        this.Owner.Orientation.DefaultOrientationBases = OrientationBases.ForwardXUpY;
+        var bullet = 
+            this.Space.CreateAtPosition(projectile,
+            this.ShotLocation.Cog.Transform.Translation);
+        var direction = this.Owner.Orientation.WorldForward;
+        if(this.Owner.Sprite.FlipX == false)
+        {
+          this.ShotLocation.Cog.FollowObject.XYOffset.X = this.ShotLocOffset;
+          bullet.RigidBody.ApplyForce(this.ShotSpeed * direction);
+        }
+        else if(this.Owner.Sprite.FlipX == true)
+        {
+          this.ShotLocation.Cog.FollowObject.XYOffset.X = -this.ShotLocOffset;
+          bullet.RigidBody.ApplyForce(-this.ShotSpeed * direction);
+        }
+    }
+}
+
+

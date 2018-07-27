@@ -1,0 +1,11 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "NormalSHPU"
+		var ResourceId = 0x5b2704c0f89025f3
+		var LoaderType = "CollisionGroup"
+		var Version = 0
+	}
+}

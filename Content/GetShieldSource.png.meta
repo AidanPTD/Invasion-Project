@@ -1,0 +1,27 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "GetShieldSource"
+		var ResourceId = 0x5b29d11726127042
+		var FrameSizeX = 1920
+		var FrameSizeY = 383
+		var FrameCount = 1
+		var FrameDelay = 0.0833333358
+		var OriginX = 960
+		var OriginY = 191
+		var PixelsPerUnit = 64
+		var Sampling = SpriteSampling.Linear
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Sources"
+		}
+	}
+}

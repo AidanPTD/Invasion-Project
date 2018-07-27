@@ -1,0 +1,28 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "PlayerWalkShoot"
+		var ResourceId = 0x5b29dec068080d0f
+		var FrameSizeX = 26
+		var FrameSizeY = 37
+		var FrameCount = 6
+		var FrameDelay = 0.0416666679
+		var OriginX = -4
+		var OriginY = 0
+		var PixelsPerUnit = 24
+		var Sampling = SpriteSampling.Nearest
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Sprite"
+			"Player"
+		}
+	}
+}

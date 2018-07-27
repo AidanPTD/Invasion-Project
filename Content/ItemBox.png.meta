@@ -1,0 +1,27 @@
+[Version:1]
+ImageContent 
+{
+	SpriteSourceBuilder 
+	{
+		var Name = "ItemBox"
+		var ResourceId = 0x5b29d2e7f2de5bbf
+		var FrameSizeX = 32
+		var FrameSizeY = 32
+		var FrameCount = 5
+		var FrameDelay = 0.0833333358
+		var OriginX = 16
+		var OriginY = 16
+		var PixelsPerUnit = 32
+		var Sampling = SpriteSampling.Nearest
+		var Looping = true
+		var Slices = Real4{0, 0, 0, 0}
+		var Fill = SpriteFill.Stretch
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"Sprite"
+		}
+	}
+}
