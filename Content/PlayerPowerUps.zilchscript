@@ -37,7 +37,7 @@ class PlayerPowerUps : ZilchComponent
     [Property]
     var NSSprite : SpriteSource = SpriteSource.NormalShield;
     [Property]
-    var InvincibilitySize : Real3 =Real3(0.2, 0.2, 0.2);
+    var InvincibilitySize : Real3 = Real3(0.2, 0.2, 0.2);
     [Property]
     var ShieldSize : Real3 = Real3(0.3, 0.3, 0.3);
     [Property]
