@@ -11,19 +11,19 @@ SoundCue
 	var PitchVariation = 0
 	var SemitoneVariation = 0
 	var ShowMusicOptions = false
-	var BeatsPerMinute = 0
-	var TimeSigBeats = 0
-	var TimeSigValue = 0
+	var BeatsPerMinute = 200
+	var TimeSigBeats = 4
+	var TimeSigValue = 4
 	var Sounds = Array
 	{
 		Object
 		{
-			var Sound = "5b0ed1e5566455f1:FBZPart2"
+			var Sound = "5b29e8b830cc31c8:CPZ"
 			var Weight = 1
-			var StartTime = 1.5
-			var EndTime = 83.4060593
-			var LoopEndTime = 83
-			var LoopStartTime = 3.20000005
+			var StartTime = 0
+			var EndTime = 220.032272
+			var LoopEndTime = 220
+			var LoopStartTime = 0
 			var LoopTailLength = 0
 			var CrossFadeLoopTail = false
 		}

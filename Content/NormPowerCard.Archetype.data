@@ -4,7 +4,7 @@ Cog
 	var Name = "NormShieldCard"
 	Transform 
 	{
-		var Translation = Real3{-2.49195433, 3.00938773, 0}
+		var Translation = Real3{2.77095747, 1.64342594, -4.99500084}
 		var Scale = Real3{1, 1, 1}
 		var Rotation = Quaternion{0, 0, 0, 1}
 	}
@@ -26,5 +26,9 @@ Cog
 		var AnimationActive = true
 		var AnimationSpeed = 1
 		var StartFrame = 0
+	}
+	TimedDeath 
+	{
+		var DeathTime = 1
 	}
 }

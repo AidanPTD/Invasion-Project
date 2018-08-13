@@ -1,0 +1,25 @@
+class TimedDeath : ZilchComponent
+{
+  var Timer : Real;
+  var TickRate : Real = 1;
+  [Property]
+  var DeathTime : Real = 3; 
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    this.Timer += event.Dt;
+    if(this.Timer > this.TickRate)
+    {
+      this.Timer -= this.TickRate;
+      this.DeathTime -= 1;
+      if(this.DeathTime <= 0)
+      {
+        this.Owner.Destroy();
+      }
+    }
+  }
+}

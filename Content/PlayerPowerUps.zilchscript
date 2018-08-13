@@ -89,12 +89,15 @@ class PlayerPowerUps : ZilchComponent
         }
         else if(this.FireShield)
         {
+          
         }
         else if(this.NormalShield)
         {
+          
         }
         else if(this.WaterShield)
         {
+          
         }
         else if(this.Speed)
         {
@@ -109,14 +112,16 @@ class PlayerPowerUps : ZilchComponent
       {
         this.EnableInvincibility();
         this.ShowPowerCard(Archetype.InvPowerCard, event.OtherObject.Transform.Translation);
-        event.OtherObject.Destroy();
+        event.OtherObject.Collider.Ghost = true;
+        event.OtherObject.Collider.SendsEvents = false;
+        event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
       }
     }
     function ShowPowerCard(card : Archetype, spawnPos : Real3)
     {
-      
       var powerCard = this.Space.CreateAtPosition(card, spawnPos);
-      Action.Property(powerCard.Actions, @powerCard.Transform.Translation, Real3(spawnPos.X, spawnPos.Y + 2, spawnPos.Z), 1.0, Ease.QuadOut);
+      Action.Property(powerCard.Actions, @powerCard.Transform.Translation, Real3(spawnPos.X, spawnPos.Y + 2, spawnPos.Z), 
+      1.1, Ease.QuadOut);
     }
     function EnableInvincibility()
     {
