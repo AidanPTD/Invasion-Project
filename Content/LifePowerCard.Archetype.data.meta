@@ -1,0 +1,11 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "LifePowerCard"
+		var ResourceId = 0x5b0ed6616bdbd160
+		var LoaderType = "Cog"
+		var Version = 0
+	}
+}

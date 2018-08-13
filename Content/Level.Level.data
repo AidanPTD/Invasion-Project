@@ -77,7 +77,7 @@ Level
 		var Name = "EditorCamera"
 		Transform 
 		{
-			var Translation = Real3{-3.80805016, 1.25277877, 20}
+			var Translation = Real3{-2.073699, 1.52567375, 20}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, -1.09278471e-08, 0, 1}
 		}
@@ -139,7 +139,7 @@ Level
 			var LookDistance = 20
 			var VerticalAngle = 0
 			var HorizontalAngle = 0
-			var LookTarget = Real3{-3.80805016, 1.25277877, -1.66455152e-07}
+			var LookTarget = Real3{-2.073699, 1.52567375, -9.06441358e-08}
 			var MoveSensitivity = 1
 		}
 	}
@@ -846,7 +846,7 @@ Level
 		var Name = "SpeedCard"
 		Transform 
 		{
-			var Translation = Real3{-4.49195433, 3.00938773, 0}
+			var Translation = Real3{-4.74195433, 3.00938773, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -994,7 +994,7 @@ Level
 		var Name = "LifeCard"
 		Transform 
 		{
-			var Translation = Real3{-1.49195433, 3.00938773, 0}
+			var Translation = Real3{-0.991954327, 3.00938773, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -1068,7 +1068,7 @@ Level
 		var Name = "NormShieldCard"
 		Transform 
 		{
-			var Translation = Real3{-2.49195433, 3.00938773, 0}
+			var Translation = Real3{-2.24195433, 3.00938773, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -1142,7 +1142,7 @@ Level
 		var Name = "FireShieldCard"
 		Transform 
 		{
-			var Translation = Real3{-0.491954327, 3.00938773, 0}
+			var Translation = Real3{0.258045673, 3.00938773, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -1216,7 +1216,7 @@ Level
 		var Name = "InvincibilityCard"
 		Transform 
 		{
-			var Translation = Real3{-5.40461111, 3.04389548, 0}
+			var Translation = Real3{-5.90461111, 3.04389548, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}
@@ -1290,7 +1290,7 @@ Level
 		var Name = "ItemBox"
 		Transform 
 		{
-			var Translation = Real3{-4.5, -0.5, 0}
+			var Translation = Real3{-6.5, -0.75, 0}
 			var Scale = Real3{1, 1, 1}
 			var Rotation = Quaternion{0, 0, 0, 1}
 		}

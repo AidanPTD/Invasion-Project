@@ -18,12 +18,12 @@ SoundCue
 	{
 		Object
 		{
-			var Sound = "5b2714a5b63d58b2:SPZ"
+			var Sound = "5b0ed1e5566455f1:FBZPart2"
 			var Weight = 1
-			var StartTime = 0
-			var EndTime = 161.843063
-			var LoopEndTime = 161.843063
-			var LoopStartTime = 0
+			var StartTime = 1.5
+			var EndTime = 83.4060593
+			var LoopEndTime = 83
+			var LoopStartTime = 3.20000005
 			var LoopTailLength = 0
 			var CrossFadeLoopTail = false
 		}

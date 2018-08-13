@@ -1,0 +1,11 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "FirePowerCard"
+		var ResourceId = 0x5b0ed67766d719ca
+		var LoaderType = "Cog"
+		var Version = 0
+	}
+}

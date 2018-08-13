@@ -108,8 +108,15 @@ class PlayerPowerUps : ZilchComponent
       if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.InvincibilityPU)
       {
         this.EnableInvincibility();
+        this.ShowPowerCard(Archetype.InvPowerCard, event.OtherObject.Transform.Translation);
         event.OtherObject.Destroy();
       }
+    }
+    function ShowPowerCard(card : Archetype, spawnPos : Real3)
+    {
+      
+      var powerCard = this.Space.CreateAtPosition(card, spawnPos);
+      Action.Property(powerCard.Actions, @powerCard.Transform.Translation, Real3(spawnPos.X, spawnPos.Y + 2, spawnPos.Z), 1.0, Ease.QuadOut);
     }
     function EnableInvincibility()
     {
