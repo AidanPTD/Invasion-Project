@@ -6,7 +6,7 @@ SoundCue
 	var UseDecibelVariation = false
 	var VolumeVariation = 0
 	var DecibelVariation = 0
-	var Pitch = 0
+	var Pitch = 0.100000001
 	var UseSemitoneVariation = false
 	var PitchVariation = 0
 	var SemitoneVariation = 0
@@ -18,11 +18,11 @@ SoundCue
 	{
 		Object
 		{
-			var Sound = "5b29e8b830cc31c8:CPZ"
+			var Sound = "5b0ae9261a389c89:Spaceport"
 			var Weight = 1
 			var StartTime = 0
-			var EndTime = 220.032272
-			var LoopEndTime = 220
+			var EndTime = 134.861481
+			var LoopEndTime = 134.861481
 			var LoopStartTime = 0
 			var LoopTailLength = 0
 			var CrossFadeLoopTail = false
