@@ -280,7 +280,7 @@ Cog
 		var SpeedTime = 20
 		var OrigSpeedTime = 20
 		var SpeedTickRate = 1
-		var TimerTrue = false
+		var TimerTrue = true
 	}
 	SoundEmitter 
 	{

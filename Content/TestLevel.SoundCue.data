@@ -6,7 +6,7 @@ SoundCue
 	var UseDecibelVariation = false
 	var VolumeVariation = 0
 	var DecibelVariation = 0
-	var Pitch = 0.100000001
+	var Pitch = 0.200000003
 	var UseSemitoneVariation = false
 	var PitchVariation = 0
 	var SemitoneVariation = 0
@@ -18,11 +18,11 @@ SoundCue
 	{
 		Object
 		{
-			var Sound = "5b0ad4a0fd8c8d46:SSZPart1"
+			var Sound = "5b0ed1e5566455f1:FBZPart2"
 			var Weight = 1
 			var StartTime = 0
-			var EndTime = 164.211502
-			var LoopEndTime = 164.211502
+			var EndTime = 83.4060593
+			var LoopEndTime = 83.4060593
 			var LoopStartTime = 0
 			var LoopTailLength = 0
 			var CrossFadeLoopTail = false

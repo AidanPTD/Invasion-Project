@@ -1,0 +1,11 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "FireItemBox"
+		var ResourceId = 0x5b0addceff98c0c0
+		var LoaderType = "Cog"
+		var Version = 0
+	}
+}
