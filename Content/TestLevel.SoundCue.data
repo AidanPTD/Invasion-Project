@@ -18,11 +18,11 @@ SoundCue
 	{
 		Object
 		{
-			var Sound = "5b0ae9261a389c89:Spaceport"
+			var Sound = "5b0ad4a0fd8c8d46:SSZPart1"
 			var Weight = 1
 			var StartTime = 0
-			var EndTime = 134.861481
-			var LoopEndTime = 134.861481
+			var EndTime = 164.211502
+			var LoopEndTime = 164.211502
 			var LoopStartTime = 0
 			var LoopTailLength = 0
 			var CrossFadeLoopTail = false

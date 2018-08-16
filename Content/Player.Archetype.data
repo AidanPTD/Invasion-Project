@@ -1,0 +1,397 @@
+[Version:1]
+Cog 
+{
+	var Name = "Player"
+	Transform 
+	{
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{1, 1, 1}
+		var Rotation = Quaternion{0, 0, 0, 1}
+	}
+	Sprite 
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var OverrideBoundingBox = false
+		var LocalAabbCenter = Real3{0, 0, 0}
+		var LocalAabbHalfExtents = Real3{1, 1, 1}
+		var GroupSortValue = 0
+		var Material = "582c575af53d18c9:AlphaSprite"
+		var VertexColor = Real4{1, 1, 1, 1}
+		var GeometryMode = SpriteGeometryMode.ZPlane
+		var SpriteSource = "5b29dd663c067d86:PlayerIdle"
+		var FlipX = false
+		var FlipY = false
+		var AnimationActive = true
+		var AnimationSpeed = 1
+		var StartFrame = 0
+	}
+	BoxCollider 
+	{
+		var Ghost = false
+		var SendsEvents = true
+		var Material = "5b29dbe6f84f0406:NoBounce"
+		var CollisionGroup = "5b29c5983e82f851:Player"
+		var Offset = Real3{0, 0, 0}
+		var HalfSize = Real3{0.5, 0.5, 0.5}
+	}
+	RigidBody 
+	{
+		var Velocity = Real3{0, 0, 0}
+		var AngularVelocity = Real3{0, 0, 0}
+		var DynamicState = RigidBodyDynamicState.Dynamic
+		var AllowSleep = true
+		var Asleep = false
+		var RotationLocked = true
+		var Mode2D = Mode2DStates.Mode2D
+	}
+	IgnoreSpaceEffects 
+	{
+		var IgnoreDrag = false
+		var IgnoreFlow = true
+		var IgnoreForce = true
+		var IgnoreGravity = false
+		var IgnorePointForce = true
+		var IgnorePointGravity = true
+		var IgnoreThrust = true
+		var IgnoreVortex = true
+		var IgnoreWind = true
+		var IgnoreTorque = true
+		var IgnoreBuoyancy = true
+		var IgnoreCustom = true
+	}
+	Player 
+	{
+		var Active = true
+		var Allow2XJump = true
+		var AllowCrouch = true
+		var XMaxSpeed = 5
+		var JumpSpeed = 10
+		var Acceleration = 1.5
+		var MoveSpeed = 12
+		var CrouchHeight = 0.800000012
+		var NoWalkingInAir = false
+		var StopOnIdle = true
+		var JumpKey = Keys.W
+		var CrouchKey = Keys.S
+		var LeftKey = Keys.A
+		var RightKey = Keys.D
+		var BoostKey = Keys.E
+		var ShootKey = Keys.Space
+		var CanWalk = true
+		var InfiniJumps = false
+		var MaxGroundAngle = 30
+	}
+	FlyingController 
+	{
+		var Active = true
+		var AbilityToFly = true
+		var FlySpeed = 10
+		var FireOffsetX = -0.600000024
+		var FireOffsetY = 0.5
+		var FlyMeterBar = CogPath
+		{
+			var Path = ""
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var Flying = false
+		var FlyingFire = CogPath
+		{
+			var Path = ""
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var FlyKey = Keys.X
+	}
+	ShootingController 
+	{
+		var ShotSpeed = 20
+		var NormalBullet = "5b289b3772735d2b:PlayerBullet"
+		var CanShoot = true
+		var ShotLocation = CogPath
+		{
+			var Path = ":/ShotLoc"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var ShotLocOffset = 1
+		var NormBullet = true
+		var PortalMode = false
+		var PortBullet = false
+		var PortBulletEnd = false
+	}
+	AnimationController 
+	{
+		var Standing = "5b29dd663c067d86:PlayerIdle"
+		var Jumping = "5b29df9215c34211:PlayerJump"
+		var Walking = "5b29dfd20ad04bb2:PlayerWalk"
+		var Crouching = "5b29dd663c067d86:PlayerIdle"
+		var StandShooting = "5b29dd54c18234bb:PlayerIdleShoot"
+		var WalkShooting = "5b29dec068080d0f:PlayerWalkShoot"
+		var JumpShooting = "5b29da25ccdccce5:PlayerJumpShoot"
+		var AfterJumpShoot = "5b29da0fd39dc073:PlayerAfterJumpShoot"
+		var JumpAnimationWhileFalling = true
+		var OrigStand = "5b29dd663c067d86:PlayerIdle"
+		var OrigWalk = "5b29dfd20ad04bb2:PlayerWalk"
+		var OrigJump = "5b29df9215c34211:PlayerJump"
+		var OrigCrouch = "5b29dd663c067d86:PlayerIdle"
+		var Flying = "5b29dce02d7c2a04:PlayerFlyGo"
+		var FlyingIdle = "5b29dca7356be09b:PlayerIdleFly"
+		var FlyingUp = "5b29dca7356be09b:PlayerIdleFly"
+		var FlyShoot = "5b29dcdb2e6e8a21:PlayerFlyShoot"
+		var FlyingShoot = "5b29dc282520212a:PlayerFlyGoShoot"
+	}
+	Orientation 
+	{
+		var GlobalUp = Real3{0, 1, 0}
+		var LocalOrientationBasis = Quaternion{0, -0.707106769, 0, 0.707106769}
+		var DefaultBases = OrientationBases.ForwardXUpY
+	}
+	PlayerPowerUps 
+	{
+		var Invincibility = false
+		var Speed = false
+		var NormalShield = false
+		var FireShield = false
+		var WaterShield = false
+		var ShieldActive = false
+		var FireCard = CogPath
+		{
+			var Path = ":/FireShieldCard"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var WaterCard = CogPath
+		{
+			var Path = ":/WaterShieldCard"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var NormalCard = CogPath
+		{
+			var Path = ":/NormShieldCard"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var InvCard = CogPath
+		{
+			var Path = ":/InvincibilityCard"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var SpeedCard = CogPath
+		{
+			var Path = ":/SpeedCard"
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var CardActiveYValue = 13.5
+		var CardNotActiveYValue = 16
+		var FSSprite = "5b29c5dc34169d44:FireShield"
+		var WSSprite = "5b29c56e20bf1279:WaterShield"
+		var NSSprite = "5b29c53c29a7a0a9:NormalShield"
+		var InvincibilitySize = Real3{0.200000003, 0.200000003, 0.200000003}
+		var ShieldSize = Real3{0.300000012, 0.300000012, 0.300000012}
+		var FireTint = Real4{1, 1, 1, 1}
+		var WaterTint = Real4{1, 1, 1, 1}
+		var NormalTint = Real4{1, 1, 1, 1}
+		var OriginalTint = Real4{1, 1, 1, 1}
+		var ShieldSpinValue1 = Real3{0, 0, 0}
+		var ShieldSpinValue2 = Real3{0, 0, 0}
+		var InvincibilityTimer = 0
+		var InvincibilityTime = 20
+		var OrigInvincTime = 20
+		var InvincibilityTickRate = 1
+		var SpeedTimer = 0
+		var SpeedTime = 20
+		var OrigSpeedTime = 20
+		var SpeedTickRate = 1
+		var TimerTrue = false
+	}
+	SoundEmitter 
+	{
+		var Volume = 1
+		var Pitch = 0
+		var Attenuator = "57ca8a6ad262efe3:DefaultAttenuation"
+		var Directional = false
+		var EmitAngle = 90
+		var RearVolume = 0.200000003
+	}
+	SimpleSound 
+	{
+		var StartPlaying = false
+		var Positional = false
+		var Cue = "4e1bd44008b4dc2a:DefaultSoundCue"
+	}
+	Hierarchy 
+	{
+		Cog [Id:0x5b29c4831d8c4864]
+		{
+			var Name = "ShieldSprite"
+			Transform 
+			{
+				var Translation = Real3{0, 0, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			Sprite 
+			{
+				var Visible = false
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var OverrideBoundingBox = false
+				var LocalAabbCenter = Real3{0, 0, 0}
+				var LocalAabbHalfExtents = Real3{1, 1, 1}
+				var GroupSortValue = 0
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var VertexColor = Real4{1, 1, 1, 1}
+				var GeometryMode = SpriteGeometryMode.ZPlane
+				var SpriteSource = "5586f579ca73ecc2:SquareBordered"
+				var FlipX = false
+				var FlipY = false
+				var AnimationActive = true
+				var AnimationSpeed = 1
+				var StartFrame = 0
+			}
+		}
+		Cog [Id:0x5b29c77e560a65b7]
+		{
+			var Name = "ShieldParticles"
+			Transform 
+			{
+				var Translation = Real3{0, 0, 0}
+				var Scale = Real3{1, 1, 1}
+				var Rotation = Quaternion{0, 0, 0, 1}
+			}
+			SpriteParticleSystem 
+			{
+				var Visible = true
+				var ViewCulling = true
+				var VisibilityEvents = true
+				var OverrideBoundingBox = false
+				var LocalAabbCenter = Real3{0, 0, 0}
+				var LocalAabbHalfExtents = Real3{1, 1, 1}
+				var GroupSortValue = 0
+				var Material = "582c575af53d18c9:AlphaSprite"
+				var BoundingBoxSize = 2
+				var ChildSystem = false
+				var SystemSpace = SystemSpace.WorldSpace
+				var WarmUpTime = 0
+				var PreviewInEditor = true
+				var VertexColor = Real4{1, 1, 1, 1}
+				var GeometryMode = SpriteParticleGeometryMode.Billboarded
+				var SpriteSource = "5b27154744eb258c:FlashParticle"
+				var ParticleAnimation = SpriteParticleAnimationMode.Single
+				var ParticleSort = SpriteParticleSortMode.None
+				var BeamBaseScale = 1
+				var BeamVelocityScale = 1
+			}
+			SphericalParticleEmitter 
+			{
+				var Active = false
+				var EmitCount = 0
+				var EmitDelay = 0
+				var EmitRate = 100
+				var EmitVariance = 0
+				var EmitRateSoftStartTime = 0
+				var Size = 0.200000003
+				var SizeVariance = 0
+				var Lifetime = 1
+				var LifetimeVariance = 0.200000003
+				var Spin = 0
+				var SpinVariance = 50
+				var RandomSpin = true
+				var Fill = 1
+				var EmitterVelocityPercent = 0
+				var StartVelocity = Real3{0, 0, 0}
+				var RandomVelocity = Real3{0, 0, 0}
+				var TangentVelocity = Real3{0, 0, 0}
+				var EmitterSize = Real3{1, 1, 0.100000001}
+				var FastMovingEmitter = false
+			}
+			LinearParticleAnimator 
+			{
+				var Force = Real3{0, 0, 0}
+				var RandomForce = Real3{0, 0, 0}
+				var Torque = 0
+				var Growth = 0
+				var Dampening = 0
+				var Twist = Real3{0, 0, 0}
+			}
+		}
+	}
+}

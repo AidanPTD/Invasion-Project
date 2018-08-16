@@ -1,0 +1,18 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "Invincibility"
+		var ResourceId = 0x5b0ad7b8d6bb5e32
+		var LoaderType = "SoundCue"
+		var Version = 0
+	}
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"SoundCue"
+		}
+	}
+}

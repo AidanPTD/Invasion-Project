@@ -71,6 +71,8 @@ class PlayerPowerUps : ZilchComponent
     var Timer : Real;
     [Property]
     var TimerTrue : Boolean;
+    
+    var Sound : SoundInstance;
     function Initialize(init : CogInitializer)
     {
         this.ShieldSprite = this.Owner.FindChildByName("ShieldSprite");
@@ -81,28 +83,42 @@ class PlayerPowerUps : ZilchComponent
     }
     function OnLogicUpdate(event : UpdateEvent)
     {
+      if(this.Invincibility)
+      {
+        if(this.TimerTrue)
+        {
+          this.InvincibilityTimer += event.Dt;
+          if(this.InvincibilityTimer > this.InvincibilityTickRate)
+          {
+            this.InvincibilityTimer -= this.InvincibilityTickRate;
+            this.InvincibilityTime -= 1;
+            if(this.InvincibilityTime == 0)
+            {
+              this.DisableInvincibility();
+            }
+          }
+        }
+      }
       if(this.ShieldActive)
       {
         this.ShieldSprite.Sprite.Visible = true;
-        if(!this.Invincibility)
-        {
-          //this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource;
-        }
-        else if(this.Speed)
-        {
-          
-        }
       }
       else
       {
           this.ShieldSprite.Sprite.Visible = true;
       }
+      if(this.Speed)
+      {
+        
+      }
     }
-    function EnableShield(shieldType : Boolean, shieldSprite : SpriteSource)
+    function EnableShield(shieldType : Boolean, shieldSprite : SpriteSource, powerCard : Archetype, powerCardTrans : Real3)
     {
       this.ShieldActive = true;
       shieldType = true;
       this.ShieldSprite.Sprite.SpriteSource = shieldSprite;
+      this.ShowPowerCard(Archetype.FirePowerCard, powerCardTrans);
+      
     }
     function OnCollision(event : CollisionEvent)
     {
@@ -110,17 +126,17 @@ class PlayerPowerUps : ZilchComponent
       {
         this.EnableInvincibility();
         this.ShowPowerCard(Archetype.InvPowerCard, event.OtherObject.Transform.Translation);
-        event.OtherObject.Collider.Ghost = true;
+        /*event.OtherObject.Collider.Ghost = true;
         event.OtherObject.Collider.SendsEvents = false;
-        event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+        event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;*/
+        this.Space.CreateAtPosition(Archetype.BrokenItemBox, event.OtherObject.Transform.Translation);
+        event.OtherObject.Destroy();
       }
       if(event.OtherObject.Collider.CollisionGroup == CollisionGroup.FirePU)
       {
-        this.FireShield = true;
-        this.ShowPowerCard(Archetype.FirePowerCard, event.OtherObject.Transform.Translation);
-        event.OtherObject.Collider.Ghost = true;
-        event.OtherObject.Collider.SendsEvents = false;
-        event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;
+        this.EnableShield(this.FireShield, this.FSSprite, Archetype.FirePowerCard, event.OtherObject.Transform.Translation);
+        this.Space.CreateAtPosition(Archetype.BrokenItemBox, event.OtherObject.Transform.Translation);
+        event.OtherObject.Destroy();
       }
     }
     function ShowPowerCard(card : Archetype, spawnPos : Real3)
@@ -131,23 +147,31 @@ class PlayerPowerUps : ZilchComponent
     }
     function EnableInvincibility()
     {
-      this.Space.FindObjectByName("GameCamera").SoundEmitter.Paused = true;
+      this.Sound = this.Space.FindObjectByName("GameCamera").SoundEmitter.PlayCue(SoundCue.Invincibility);
+      //if(this.Sound.Paused)
+      //{
+        this.Sound.Stop();
+      //}
+      //else if(!this.Sound.IsPlaying)
+        this.Sound = this.Space.FindObjectByName("GameCamera").SoundEmitter.PlayCue(SoundCue.Invincibility);
+      this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = true;
       this.Invincibility = true;
       //this.ShieldParticles.SpriteParticleSystem.Visible = true;
       this.ShieldParticles.SphericalParticleEmitter.Active = true;
       this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource.Twinkle;
       this.ShieldParticles.SphericalParticleEmitter.EmitRate = 100;
       this.ShieldParticles.SpriteParticleSystem.VertexColor = Real4(1, 1, 1, 1);
+      if(this.FireShield || this.WaterShield || this.NormalShield)
+        this.ShieldActive = false;
     }
     function DisableInvincibility()
     {
-      this.Space.FindObjectByName("GameCamera").SoundEmitter.Paused = true;
-      this.Invincibility = true;
+      this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = false;
+      this.Invincibility = false;
       //this.ShieldParticles.SpriteParticleSystem.Visible = true;
-      this.ShieldParticles.SphericalParticleEmitter.Active = true;
-      this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource.Twinkle;
-      this.ShieldParticles.SphericalParticleEmitter.EmitRate = 100;
-      this.ShieldParticles.SpriteParticleSystem.VertexColor = Real4(1, 1, 1, 1);
+      this.ShieldParticles.SphericalParticleEmitter.Active = false;
+      if(this.FireShield || this.WaterShield || this.NormalShield)
+        this.ShieldActive = true;
     }
     
 }
