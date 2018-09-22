@@ -71,8 +71,7 @@ class PlayerPowerUps : ZilchComponent
     var Timer : Real;
     [Property]
     var TimerTrue : Boolean;
-    
-    var Sound : SoundInstance;
+    [Virtual]
     function Initialize(init : CogInitializer)
     {
         this.ShieldSprite = this.Owner.FindChildByName("ShieldSprite");
@@ -125,9 +124,6 @@ class PlayerPowerUps : ZilchComponent
       {
         this.EnableInvincibility();
         this.ShowPowerCard(Archetype.InvPowerCard, event.OtherObject.Transform.Translation);
-        /*event.OtherObject.Collider.Ghost = true;
-        event.OtherObject.Collider.SendsEvents = false;
-        event.OtherObject.Sprite.SpriteSource = SpriteSource.BreakItem;*/
         this.Space.CreateAtPosition(Archetype.BrokenItemBox, event.OtherObject.Transform.Translation);
         event.OtherObject.Destroy();
       }
@@ -147,22 +143,10 @@ class PlayerPowerUps : ZilchComponent
     }
     function EnableInvincibility()
     {
-      //this.Sound = this.Owner.SoundEmitter.PlayCue(SoundCue.Invincibility);
-      //if(!this.Sound.IsPlaying)
-      //{
-        //this.Sound = this.Owner.SoundEmitter.PlayCue(SoundCue.Invincibility);
-      //  this.InvincibilityTime = this.OrigInvincTime;
-      //}
-      //else
-      //{
-      //}
-      this.Sound = this.Space.FindObjectByName("GameCamera").SoundEmitter.PlayCue(SoundCue.Invincibility);
-      this.Sound.Stop();
-      Console.WriteLine(this.Owner.SoundEmitter.IsPlaying);
-      //if(!this.Owner.SoundEmitter.IsPlaying)
-      //{
-      //  this.Owner.SoundEmitter.PlayCue(SoundCue.Invincibility);
-      //}
+      
+      //this.Sound = this.Space.FindObjectByName("GameCamera").SoundEmitter.PlayCue(SoundCue.Invincibility);
+      //this.Sound.Stop();
+     
       this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = true;
       this.Invincibility = true;
       this.ShieldParticles.SphericalParticleEmitter.Active = true;
@@ -174,7 +158,7 @@ class PlayerPowerUps : ZilchComponent
     }
     function DisableInvincibility()
     {
-      this.Sound.Stop();
+      //this.Sound.Stop();
       this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = false;
       this.Invincibility = false;
       this.ShieldParticles.SphericalParticleEmitter.Active = false;

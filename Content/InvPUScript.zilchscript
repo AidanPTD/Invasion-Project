@@ -1,0 +1,15 @@
+class InvPUScript : PlayerPowerUps
+{
+  var Particles : Cog;
+  
+  var Sound : SoundInstance;
+  [Override]
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+  }
+}
