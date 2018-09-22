@@ -78,7 +78,6 @@ class PlayerPowerUps : ZilchComponent
         this.ShieldParticles = this.Owner.FindChildByName("ShieldParticles");
         Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
         Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollision);
-        
     }
     function OnLogicUpdate(event : UpdateEvent)
     {
@@ -146,8 +145,10 @@ class PlayerPowerUps : ZilchComponent
       
       //this.Sound = this.Space.FindObjectByName("GameCamera").SoundEmitter.PlayCue(SoundCue.Invincibility);
       //this.Sound.Stop();
-     
+      
       this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = true;
+      if(!this.Owner.SoundEmitter.IsPlaying)
+        this.Owner.SoundEmitter.PlayCue(SoundCue.Invincibility);
       this.Invincibility = true;
       this.ShieldParticles.SphericalParticleEmitter.Active = true;
       this.ShieldParticles.SpriteParticleSystem.SpriteSource = SpriteSource.Twinkle;
@@ -159,6 +160,7 @@ class PlayerPowerUps : ZilchComponent
     function DisableInvincibility()
     {
       //this.Sound.Stop();
+      this.Owner.SimpleSound.Stop();
       this.Space.FindObjectByName("GameCamera").SimpleSound.Paused = false;
       this.Invincibility = false;
       this.ShieldParticles.SphericalParticleEmitter.Active = false;

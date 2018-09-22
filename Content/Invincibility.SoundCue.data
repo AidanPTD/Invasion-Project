@@ -2,11 +2,11 @@
 SoundCue 
 {
 	var PlayMode = SoundPlayMode.Single
-	var Volume = 1
+	var Volume = 0.5
 	var UseDecibelVariation = false
 	var VolumeVariation = 0
 	var DecibelVariation = 0
-	var Pitch = 0.200000003
+	var Pitch = 0
 	var UseSemitoneVariation = false
 	var PitchVariation = 0
 	var SemitoneVariation = 0

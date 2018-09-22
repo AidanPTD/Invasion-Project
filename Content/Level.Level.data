@@ -273,9 +273,9 @@ Level
 		}
 		SimpleSound 
 		{
-			var StartPlaying = false
+			var StartPlaying = true
 			var Positional = false
-			var Cue = "5b2714ccb51a0e50:TestLevel"
+			var Cue = "5b0ad7b8d6bb5e32:Invincibility"
 		}
 	}
 	Cog [InheritId:"5b0ad43ee9baa009:Player"][ContextId:5]
